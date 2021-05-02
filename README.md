@@ -1,4 +1,4 @@
-A Django UI for intake of locally scraped data
+This is a Django app for intake of data scraped by your computer.
 
 # Getting Started
 1. Clone this repo
