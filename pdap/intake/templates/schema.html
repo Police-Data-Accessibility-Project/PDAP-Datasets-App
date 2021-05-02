@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<head>
+    <title>PDAP - Data Intake</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+</head>
+
+<body class='bg-light'>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h1>Police Data Accessibility Project</h1>
+            <h2>Scraper Schema.json Generator</h2>
+            <p class="lead">Fill out the form below to generate a <span class="badge bg-dark">schema.json</span> file for the Scrapers repo!</p>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h3 class="mb-3">Agency Information</h3>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label for="states" class="form-label">State:</label>
+                        <div class="input-group">
+                            <select class="form-select" id='states'>
+                                <option selected disabled>Choose a state...</option>
+                                {% for state in states %}
+                                <option  value="{{state.name_iso}}"> <b> {{state.name_iso}} </b> - {{state.name}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div> <!-- end col -->
+                    <div class="col-6">
+                        <label for="agencies" class="form-label">Agency:</label>
+                        <div class="input-group">
+                            <select  class="form-select" id='agencies'>
+                                <option selected disabled>Choose a state first!</option>
+                            </select>
+                        </div>
+                    </div> <!-- end col -->
+                    <div id="agency-info">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">Latitude:</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="agency_lat" />
+                                </div>
+                            </div><!-- end col -->
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">Longitude:</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="agency_lng" />
+                                </div>
+                            </div><!-- end col -->
+                        </div> <!-- end location row -->
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="agencies" class="form-label">Agency Type:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='agency_type'>
+                                        {% for type in agency_types %}
+                                            <option  value="{{type.id}}"> <b> {{type.id}} </b> - {{type.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div><!-- end col -->
+                        </div> <!-- end agency type -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">City:</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="agency_city" />
+                                </div>
+                            </div><!-- end col -->
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">State:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='agency_state'>
+                                        {% for state in states %}
+                                            <option  value="{{state.name_iso}}"> <b> {{state.name_iso}} </b> - {{state.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div><!-- end col -->
+                        </div> <!-- end city state row -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">ZIP Code:</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="agency_zip" />
+                                </div>
+                            </div><!-- end col -->
+                            <div class="col-6">
+                                <label for="agencies" class="form-label">FIPS: </label>
+                                <div class="input-group">
+                                    <input class="form-control" id="agency_fips" />
+                                </div>
+                                <button id="fcc_get" class="btn btn-sm btn-success">Derive FIPS from Lat & Lng</button>
+                            </div><!-- end col -->
+                        </div> <!-- end city state row -->
+                    </div> <!-- end agency info-->
+                </div> <!-- end form row -->
+                <br />
+                <h3 class="mb-3">Dataset Information</h3>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="col-12">
+                            <label for="datasets" class="form-label">Dataset:</label>
+                            <div class="input-group">
+                                <select  class="form-select" id='datasets'>
+                
+                                </select>
+                            </div>
+                        </div> <!-- end col -->
+                        <div id="new_dataset" class="row g-3" style="display: none">
+                            <div class="col-6">
+                                <label for="data_types" class="form-label">Data Type:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='data_types'>
+                                        <option selected disabled>Choose a data type...</option>
+                                        {% for type in data_types %}
+                                        <option  value="{{type.id}}"> <b> {{type.id}} </b> - {{type.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- end col -->
+                            <div class="col-6">
+                                <label for="source_types" class="form-label">Source Type:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='source_types'>
+                                        <option selected disabled>Choose a source type...</option>
+                                        {% for type in source_types %}
+                                        <option  value="{{type.id}}"> <b> {{type.id}} </b> - {{type.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- end col -->
+                            <div class="col-6">
+                                <label for="format_types" class="form-label">Format Type:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='format_types'>
+                                        <option selected disabled>Choose a format type...</option>
+                                        {% for type in format_types %}
+                                        <option  value="{{type.id}}"> <b> {{type.id}} </b> - {{type.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- end col -->
+                            <div class="col-6">
+                                <label for="update_frequency" class="form-label">Update Frequency:</label>
+                                <div class="input-group">
+                                    <select class="form-select" id='update_frequency'>
+                                        <option selected disabled>Choose how often the data refreshes...</option>
+                                        {% for type in update %}
+                                        <option  value="{{type.id}}"> <b> {{type.id}} </b> - {{type.name}} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end form row -->
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <h3 class="mb-3">Output</h3>
+                <!--The <pre> block takes spaces into effect, so we need to ensure it's not indented with the html-->
+                <pre class="chroma bg-dark text-white rounded-2 p-3">
+{
+    "agency_id": "<span id="output_agency"></span>",
+    "agency_info":{
+        "agency_name":"<span id="output_agency_name"></span>",
+        "agency_coords":{"lat": "<span id="output_agency_lat"></span>", "lng":"<span id="output_agency_lng"></span>"},
+        "agency_type": <span id="output_agency_type"></span>,
+        "city": "<span id="output_agency_city"></span>",
+        "state": "<span id="output_agency_state"></span>",
+        "zip":"<span id="output_agency_zip"></span>",
+        "county_fips":"<span id="output_agency_fips"></span>"
+    },
+    "data": [
+        {
+            "dataset_id": "<span id="output_id"></span>",
+            "url":"<span id="output_url"></span>",
+            "full_data_location":"<span id="output_data"></span>",
+            "source_type": <span id="output_st"></span>,
+            "data_type": <span id="output_dt"></span>,
+            "format_type": <span id="output_ft"></span>,
+            "update_frequency": <span id="output_uf"></span>,
+            "mapping":[
+            ]
+        }
+    ]
+    
+}
+                    
+                </pre>
+            </div>
+        </div>
+        
+    </div>
+    
+    
+</body>
+<script>
+    var agency_list;
+    var dataset_list;
+    function populate_agencies(agencies){
+        agency_list = {};
+        $('#agencies').find('option').remove(); // remove all options and add the placeholder
+        $('#agencies').append('<option selected disabled> Choose an agency from '+$('#states').val()+'...</option>')
+        // add the agencies to the drop down
+        $.each(agencies, function(key, agency){
+            agency_list[agency.id] = agency;
+            $('#agencies').append('<option value="'+agency.id+'">'+agency.name+'</option>');
+        });  
+        console.log(agency_list)
+    }
+
+    function populate_datasets(datasets){
+        dataset_list = {};
+        $('#datasets').find('option').remove(); // remove all options and add the placeholder
+        $('#datasets').append('<option selected disabled> Choose an dataset from '+$('#agencies option:selected').text()+'...</option>');
+        $('#datasets').append('<option value="new"> New Dataset </option>');
+        // add the agencies to the drop down
+        $.each(datasets, function(key, dataset){
+            dataset_list[dataset.id] = datasets;
+            //console.log(dataset);
+            $('#datasets').append('<option value="'+dataset.id+'">'+dataset.name+'</option>');
+        });  
+        
+        console.log(dataset_list);
+    }
+
+    function createUUID() {
+        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+
+    $(document).ready(function(){
+        $('#new_dataset').hide();
+        $('#agency-info').hide();
+        $('#states').change(function(){
+            
+            $.get('ajax/get_agencies/'+ $('#states').val() + '/', function (data){
+                //console.log(data);
+                populate_agencies(data);
+                
+            });
+        });
+
+        $('#agencies').change(function(){
+            $('#agency-info').show();
+            // load the stuff to the schema.json and fields
+            $('#output_agency').text($(this).val());
+            $('#agency_lat').val(agency_list[$('#agencies').val()].lat).trigger("input");
+            $('#agency_lng').val(agency_list[$('#agencies').val()].lng).trigger("input");
+            $('#agency_type').val(agency_list[$('#agencies').val()].agency_type).change();
+            $('#agency_city').val(agency_list[$('#agencies').val()].city).trigger("input");
+            $('#agency_state').val(agency_list[$('#agencies').val()].state_iso).change();
+            $('#agency_zip').val(agency_list[$('#agencies').val()].zip).trigger("input");
+            $('#agency_fips').val(agency_list[$('#agencies').val()].county_fips).trigger("input");
+            $('#output_agency_name').text($('#agencies option:selected').text());
+            $.get('ajax/get_datasets/'+ $('#agencies').val() + '/', function (data){
+                console.log(data);
+                populate_datasets(data);
+            });
+        });
+
+        $('#datasets').change(function(){
+            // empty out values
+            $('#output_id').text(' ');
+            $('#output_dt').text(' ');
+            $('#output_st').text(' ');
+            $('#output_ft').text(' ');
+            $('#output_uf').text(' ');
+            
+            // new datasets, generate a new UUID
+            if($('#datasets').val() == 'new'){
+                $('#new_dataset').show();
+                $('#output_id').text(createUUID());
+            }
+            // pull existing data from dolt
+            else{
+                $('#new_dataset').hide();
+                $('#output_id').text($(this).val());
+                $('#output_dt').text(dataset_list[$(this).val()][0].data_types_id);
+                $('#output_st').text(dataset_list[$(this).val()][0].source_type_id);
+                $('#output_ft').text(dataset_list[$(this).val()][0].format_types_id);
+                $('#output_uf').text(dataset_list[$(this).val()][0].update_frequency);
+            }
+        });
+
+        $('#fcc_get').click(function(){
+            $.get('https://geo.fcc.gov/api/census/area?lat='+$('#agency_lat').val()+'&lon='+$('#agency_lng').val()+'&format=json', function (data){
+                console.log(data);
+                $('#agency_fips').val(data.results[0].county_fips).trigger("input");
+            });
+        })
+
+        // agency details
+        $('#agency_lat').on('input', function(){$('#output_agency_lat').text($(this).val());});
+        $('#agency_lng').on('input', function(){$('#output_agency_lng').text($(this).val());});
+        $('#agency_type').change(function(){$('#output_agency_type').text($(this).val());});
+        $('#agency_city').on('input', function(){$('#output_agency_city').text($(this).val());});
+        $('#agency_state').change(function(){$('#output_agency_state').text($(this).val());});
+        $('#agency_zip').on('input', function(){$('#output_agency_zip').text($(this).val());});
+        $('#agency_fips').on('input', function(){$('#output_agency_fips').text($(this).val());});
+
+        // new datasets will populate from dropdowns
+        $('#data_types').change(function(){$('#output_dt').text($(this).val());});
+        $('#source_types').change(function(){$('#output_st').text($(this).val());});
+        $('#format_types').change(function(){$('#output_ft').text($(this).val());});
+        $('#update_frequency').change(function(){$('#output_uf').text($(this).val());});
+    });
+</script>
+</html>
