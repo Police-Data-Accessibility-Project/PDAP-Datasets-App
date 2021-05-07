@@ -1,6 +1,7 @@
 # specific
 data.json
 db.json
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files
