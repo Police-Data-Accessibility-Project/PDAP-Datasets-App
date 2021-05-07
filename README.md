@@ -1,4 +1,4 @@
-# pdap-intake-ui
+# PDAP App
  Prototype Django UI for intake of data
 
  ## Getting Started
