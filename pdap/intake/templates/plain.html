@@ -133,23 +133,32 @@ Datasets Table
         $('#agencies').append('<option selected disabled> Choose an agency from '+$('#states').val()+'...</option>')
         // add the agencies to the drop down
         $.each(agencies, function(key, agency){
-            agency_list[agency.id] = agency;
+            id = (agency.pk).replace(/-/g, ""); //remove hyphens from UUID
+            agency_list[id] = agency;
             //console.log(agency);
-            $('#agencies').append('<option value="'+agency.id+'">'+agency.name+'</option>');
+            $('#agencies').append('<option value="'+id+'">'+agency.fields.name+'</option>');
         });  
     }
 
     function populate_datasets(datasets){
+        console.log('Populating Datasets...');
         dataset_list = {};
         $('#datasets').find('option').remove(); // remove all options and add the placeholder
         $('#datasets').append('<option selected disabled> Choose an dataset from '+$('#agencies option:selected').text()+'...</option>');
         $('#datasets').append('<option value="new"> New Dataset </option>');
-        // add the agencies to the drop down
-        $.each(datasets, function(key, dataset){
-            dataset_list[dataset.id] = datasets;
-            //console.log(dataset);
-            $('#datasets').append('<option value="'+dataset.id+'">'+dataset.name+'</option>');
-        });  
+        // add the agencies to the drop down if they exist
+        if(datasets.msg == "no datasets"){
+            console.log('No Datasets to unpack!')
+        }
+        else{
+            
+            $.each(datasets, function(key, dataset){
+                id = (dataset.pk).replace(/-/g, ""); //remove hyphens from UUID
+                dataset_list[id] = datasets;
+                //console.log(dataset);
+                $('#datasets').append('<option value="'+id+'">'+dataset.fields.name+'</option>');
+            });  
+        }
         
         console.log(dataset_list);
     }
@@ -163,11 +172,18 @@ Datasets Table
 
 
     $(document).ready(function(){
+        // reset form on reload
+        $(':input')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
+        $('#states').val($("#states option:first").val()); // add the choose a state text back
         $('#new_dataset').hide();
         $('#states').change(function(){
             
-            $.get('ajax/get_agencies/'+ $('#states').val() + '/', function (data){
-                //console.log(data);
+            $.get('/intake/ajax/get_agencies/'+ $('#states').val() + '/', function (data){
+                console.log(data);
                 populate_agencies(data);
                 
             });
@@ -175,10 +191,21 @@ Datasets Table
 
         $('#agencies').change(function(){
             $('#output_agency').text($(this).val());
-            $.get('ajax/get_datasets/'+ $('#agencies').val() + '/', function (data){
-                console.log(data);
-                populate_datasets(data);
-            });
+            console.log('Agency selected');
+            $.ajax(
+                {
+                    url: '/intake/ajax/get_datasets/'+ $('#agencies').val() + '/',
+                    success: function (data){
+                        populate_datasets(data);
+                    },
+                    error: function(e){
+                        console.log(e);
+                    },
+                    complete: function(){
+                        console.log('Datasets AJAX done')
+                    }
+                }
+            );
         });
 
         $('#datasets').change(function(){
@@ -194,14 +221,14 @@ Datasets Table
                 $('#new_dataset').show();
                 $('#output_id').text(createUUID());
             }
-            // pull existing data from dolt
+            // pull existing data from sql
             else{
                 $('#new_dataset').hide();
                 $('#output_id').text($(this).val());
-                $('#output_dt').text(dataset_list[$(this).val()][0].data_types_id);
-                $('#output_st').text(dataset_list[$(this).val()][0].source_type_id);
-                $('#output_ft').text(dataset_list[$(this).val()][0].format_types_id);
-                $('#output_uf').text(dataset_list[$(this).val()][0].update_frequency);
+                $('#output_dt').text(dataset_list[$(this).val()][0].fields.data_type);
+                $('#output_st').text(dataset_list[$(this).val()][0].fields.source_type);
+                $('#output_ft').text(dataset_list[$(this).val()][0].fields.format_type);
+                $('#output_uf').text(dataset_list[$(this).val()][0].fields.update_frequency);
             }
         });
 

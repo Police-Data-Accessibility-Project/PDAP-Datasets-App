@@ -26,7 +26,7 @@
                         <label for="states" class="form-label">State:</label>
                         <div class="input-group">
                             <select class="form-select" id='states'>
-                                <option selected disabled>Choose a state...</option>
+                                <option selected disabled id='cas'>Choose a state...</option>
                                 {% for state in states %}
                                 <option  value="{{state.name_iso}}"> <b> {{state.name_iso}} </b> - {{state.name}} </option>
                                 {% endfor %}
@@ -213,23 +213,32 @@
         $('#agencies').append('<option selected disabled> Choose an agency from '+$('#states').val()+'...</option>')
         // add the agencies to the drop down
         $.each(agencies, function(key, agency){
-            agency_list[agency.id] = agency;
-            $('#agencies').append('<option value="'+agency.id+'">'+agency.name+'</option>');
+            id = (agency.pk).replace(/-/g, ""); //remove hyphens from UUID
+            agency_list[id] = agency;
+            console.log(agency);
+            $('#agencies').append('<option value="'+id+'">'+agency.fields.name+'</option>');
         });  
-        console.log(agency_list)
     }
 
     function populate_datasets(datasets){
+        console.log('Populating Datasets...');
         dataset_list = {};
         $('#datasets').find('option').remove(); // remove all options and add the placeholder
         $('#datasets').append('<option selected disabled> Choose an dataset from '+$('#agencies option:selected').text()+'...</option>');
         $('#datasets').append('<option value="new"> New Dataset </option>');
-        // add the agencies to the drop down
-        $.each(datasets, function(key, dataset){
-            dataset_list[dataset.id] = datasets;
-            //console.log(dataset);
-            $('#datasets').append('<option value="'+dataset.id+'">'+dataset.name+'</option>');
-        });  
+        // add the agencies to the drop down if they exist
+        if(datasets.msg == "no datasets"){
+            console.log('No Datasets to unpack!')
+        }
+        else{
+            
+            $.each(datasets, function(key, dataset){
+                id = (dataset.pk).replace(/-/g, ""); //remove hyphens from UUID
+                dataset_list[id] = datasets;
+                //console.log(dataset);
+                $('#datasets').append('<option value="'+id+'">'+dataset.fields.name+'</option>');
+            });  
+        }
         
         console.log(dataset_list);
     }
@@ -243,11 +252,18 @@
 
 
     $(document).ready(function(){
+        // reset form on reload
+        $(':input')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
+        $('#states').val($("#states option:first").val()); // add the choose a state text back
         $('#new_dataset').hide();
         $('#agency-info').hide();
         $('#states').change(function(){
             
-            $.get('ajax/get_agencies/'+ $('#states').val() + '/', function (data){
+            $.get('/intake/ajax/get_agencies/'+ $('#states').val() + '/', function (data){
                 //console.log(data);
                 populate_agencies(data);
                 
@@ -258,15 +274,15 @@
             $('#agency-info').show();
             // load the stuff to the schema.json and fields
             $('#output_agency').text($(this).val());
-            $('#agency_lat').val(agency_list[$('#agencies').val()].lat).trigger("input");
-            $('#agency_lng').val(agency_list[$('#agencies').val()].lng).trigger("input");
-            $('#agency_type').val(agency_list[$('#agencies').val()].agency_type).change();
-            $('#agency_city').val(agency_list[$('#agencies').val()].city).trigger("input");
-            $('#agency_state').val(agency_list[$('#agencies').val()].state_iso).change();
-            $('#agency_zip').val(agency_list[$('#agencies').val()].zip).trigger("input");
-            $('#agency_fips').val(agency_list[$('#agencies').val()].county_fips).trigger("input");
+            $('#agency_lat').val(agency_list[$('#agencies').val()].fields.lat).trigger("input");
+            $('#agency_lng').val(agency_list[$('#agencies').val()].fields.lng).trigger("input");
+            $('#agency_type').val(agency_list[$('#agencies').val()].fields.agency_type).change();
+            $('#agency_city').val(agency_list[$('#agencies').val()].fields.city).trigger("input");
+            $('#agency_state').val(agency_list[$('#agencies').val()].fields.state_iso).change();
+            $('#agency_zip').val(agency_list[$('#agencies').val()].fields.zipcode).trigger("input");
+            $('#agency_fips').val(agency_list[$('#agencies').val()].fields.county_fips).trigger("input");
             $('#output_agency_name').text($('#agencies option:selected').text());
-            $.get('ajax/get_datasets/'+ $('#agencies').val() + '/', function (data){
+            $.get('/intake/ajax/get_datasets/'+ $('#agencies').val() + '/', function (data){
                 console.log(data);
                 populate_datasets(data);
             });
@@ -289,10 +305,10 @@
             else{
                 $('#new_dataset').hide();
                 $('#output_id').text($(this).val());
-                $('#output_dt').text(dataset_list[$(this).val()][0].data_types_id);
-                $('#output_st').text(dataset_list[$(this).val()][0].source_type_id);
-                $('#output_ft').text(dataset_list[$(this).val()][0].format_types_id);
-                $('#output_uf').text(dataset_list[$(this).val()][0].update_frequency);
+                $('#output_dt').text(dataset_list[$(this).val()][0].fields.data_type);
+                $('#output_st').text(dataset_list[$(this).val()][0].fields.source_type);
+                $('#output_ft').text(dataset_list[$(this).val()][0].fields.format_type);
+                $('#output_uf').text(dataset_list[$(this).val()][0].fields.update_frequency);
             }
         });
 

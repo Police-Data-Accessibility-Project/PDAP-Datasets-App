@@ -1,6 +1,7 @@
-This is a Django app for intake of data scraped by your computer.
+# pdap-intake-ui
+ Prototype Django UI for intake of data
 
-# Getting Started
+ ## Getting Started
 1. Clone this repo
 2. Have Python, PIP & virtualenv installed
 3. Create a venv
