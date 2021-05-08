@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ['pdap.ericturner.it', '127.0.0.1', 'map.pdap.io', 'localhost', 'app.pdap.io', os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")]
+ALLOWED_HOSTS = ['pdap.ericturner.it', '127.0.0.1', 'map.pdap.io', 'localhost', 'app.pdap.io', 'app.pdap.dev']
 
 
 # Application definition
