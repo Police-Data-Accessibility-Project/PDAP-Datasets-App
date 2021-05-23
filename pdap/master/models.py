@@ -98,11 +98,17 @@ class Scraper(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
+""" Current Status of Datasets (added 14 May 2021) """
+class Dataset_Status(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    description = models.CharField(max_length=255)
+
 
 """ datasets master table """
 class Dataset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     url = models.CharField(max_length=255, unique=True)
+    status = models.ForeignKey(Dataset_Status, null=True, on_delete=models.SET_NULL)
     name = models.TextField(null=True)
     source_type = models.ForeignKey(Source_Type, null=True, on_delete=models.SET_NULL)
     data_type = models.ForeignKey(Data_Type, null=True, on_delete=models.SET_NULL)
@@ -116,3 +122,4 @@ class Dataset(models.Model):
     notes = models.TextField(null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
