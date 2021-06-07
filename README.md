@@ -1,5 +1,5 @@
 # PDAP App
-Prototype Django UI for intake of data.
+A set of tool to help data scrapers collect and submit data.
 
 ## Getting Started
 1. Clone this repo
