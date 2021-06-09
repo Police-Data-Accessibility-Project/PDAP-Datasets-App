@@ -51,6 +51,9 @@ class Agency(models.Model):
     lat = models.FloatField(null=True)
     lng = models.FloatField(null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    data_policy = models.CharField(max_length=1000, null=True)
+    country = models.CharField(max_length=2, default='US')
+    homepage_url = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name_plural = "Agencies"
@@ -109,7 +112,6 @@ class Dataset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     url = models.CharField(max_length=255, unique=True)
     status = models.ForeignKey(Dataset_Status, null=True, on_delete=models.SET_NULL)
-    name = models.TextField(null=True)
     source_type = models.ForeignKey(Source_Type, null=True, on_delete=models.SET_NULL)
     data_type = models.ForeignKey(Data_Type, null=True, on_delete=models.SET_NULL)
     format_type = models.ForeignKey(Format_Type, null=True, on_delete=models.SET_NULL)
@@ -118,8 +120,9 @@ class Dataset(models.Model):
     portal_type = models.CharField(max_length=255, null=True)
     coverage_start = models.DateField(null=True)
     scraper = models.ForeignKey(Scraper, null=True, on_delete=models.SET_NULL)
-    can_scrape = models.BooleanField(default=1)
+    can_scrape = models.BooleanField(default=1, null=True)
     notes = models.TextField(null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    machine_readable = models.BooleanField(null=True)
 
