@@ -52,7 +52,7 @@ class Agency(models.Model):
     lng = models.FloatField(null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     data_policy = models.CharField(max_length=1000, null=True)
-    country = models.CharField(max_length=2, default='US')
+    country = models.CharField(max_length=2, default='US', null=True)
     homepage_url = models.CharField(max_length=1000, null=True)
 
     class Meta:
