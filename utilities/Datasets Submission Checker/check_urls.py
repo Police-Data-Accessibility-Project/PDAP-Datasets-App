@@ -8,7 +8,7 @@ import requests
 import csv
 import os
 
-working_dir: str = "working"
+working_dir: str = "databases"
 dataset: str = os.path.join(working_dir, "datasets")
 csv_file: str = os.path.join(dataset, "urls.csv")
 e_csv_file: str = os.path.join(working_dir, "url-errors.csv")

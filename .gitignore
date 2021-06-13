@@ -12,6 +12,10 @@ __pycache__/
 # C extensions
 *.so
 
+# store an empty databases folder for people to clone data into
+databases/*
+!databases/.gitkeep
+
 # Distribution / packaging
 .Python
 build/
