@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 
-working_dir: str = "working"
+working_dir: str = "databases"
 dataset: str = os.path.join(working_dir, "datasets")
 csv_file: str = os.path.join(dataset, "spaces-agencies.csv")
 e_csv_file: str = os.path.join(dataset, "fixed-spaces-agencies.csv")

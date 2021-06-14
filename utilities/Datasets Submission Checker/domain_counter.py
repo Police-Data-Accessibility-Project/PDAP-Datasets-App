@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import pandas as pd
 import os
 
-working_dir: str = "working"
+working_dir: str = "databases"
 address_csv: str = os.path.join(working_dir, "datasets", "agencies.csv")
 export_csv: str = os.path.join(working_dir, "datasets", "agencies_counter.csv")
 
