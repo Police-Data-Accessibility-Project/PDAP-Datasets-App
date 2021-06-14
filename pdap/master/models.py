@@ -110,7 +110,7 @@ class Dataset_Status(models.Model):
 """ datasets master table """
 class Dataset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    url = models.CharField(max_length=255, unique=True)
+    url = models.CharField(max_length=255)
     status = models.ForeignKey(Dataset_Status, null=True, on_delete=models.SET_NULL)
     source_type = models.ForeignKey(Source_Type, null=True, on_delete=models.SET_NULL)
     data_type = models.ForeignKey(Data_Type, null=True, on_delete=models.SET_NULL)
