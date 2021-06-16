@@ -1,5 +1,5 @@
 # When to use this
-If you're adding to the [Datasets database](https://www.dolthub.com/repositories/pdap/datasets/doc/master), **run these scripts and post your results with your PR**.
+If you're reviewing a PR in the [Datasets database](https://www.dolthub.com/repositories/pdap/datasets/doc/master), or want to speed up a review, **run these scripts and post your results with your PR**.
 
 These scripts are set up to assume that you set up your DoltHub database in the databases folder, like so: `PDAP-app/databases/datasets` . The script is assumed to live in the git repo directory. So, you may need to modify it for your workflow.
 
