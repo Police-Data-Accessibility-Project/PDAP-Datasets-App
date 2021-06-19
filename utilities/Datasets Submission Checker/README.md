@@ -1,5 +1,5 @@
 # When to use this
-During Data Bounties, only the DoltHub team can approve PRs. This process helps make approvals very quick.
+During Data Bounties, only the DoltHub team can approve PRs. This process helps make approvals happen quickly. [Head to the docs](https://docs.pdap.io/components/data-collection/dataset-catalog/submit-or-update-datasets/validate-datasets-prs) to learn more.
 
 If you're reviewing a Pull Request (PR) in the [Datasets database](https://www.dolthub.com/repositories/pdap/datasets/doc/master), or want to speed up a review, **run these scripts and comment the results on the PR.**
 
