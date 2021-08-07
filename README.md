@@ -1,5 +1,5 @@
-# PDAP App
-A set of tools to help data scrapers collect and submit data.
+# Datasets Web App
+Tools to help you interact with our Datasets table.
 
 ## Getting Started
 1. Clone this repo and `cd` into the directory
