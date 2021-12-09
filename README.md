@@ -1,5 +1,14 @@
-# Datasets Web App
-Tools to help you interact with our Datasets table.
+# Goal of this app
+People who want to contribute to PDAP are involved in these tasks: 
+   a. Contribute or modify existing Datasets
+   b. Find a known police Dataset URL in our database
+   c. Generate a new Python Scraper for a Dataset from a template
+   d. Configure the Scraper code to work with the particular Dataset
+   e. Run the Scraper to extract data at regular intervals
+   f. Review the health of the scraper ecosystem, e.g. "which scrapers need to be updated?"; "which new datasets need scrapers?"
+
+## Current app state
+This app helps with a. We are working to expand the scope of the app&mdash;reach out if you can help!
 
 ## Getting Started
 1. Clone this repo and `cd` into the directory
